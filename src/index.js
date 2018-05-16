@@ -3,7 +3,7 @@ import GameScene from "./scenes/gamescene";
 
 const config = {
   type: Phaser.AUTO,
-  width: 800,
+  width: 1066,
   height: 600,
   physics: {
     default: 'arcade',
@@ -15,6 +15,7 @@ const config = {
 };
 
 const theGame = new Phaser.Game(config);
+
 
 if (module.hot) {
   module.hot.accept(() => {});

@@ -1,6 +1,6 @@
 import Phaser from "phaser";
-import logo from "../assets/phaserlogo.png";
-import floor from "../assets/floor.jpg";
+import background from "../assets/Background.jpg";
+import floors from "../assets/floor.png";
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -9,17 +9,18 @@ export default class GameScene extends Phaser.Scene {
   }
 
   preload(){
-    this.load.image("logo", logo);
-    this.load.image("floor", floor);
+    this.load.image("floor", floors);
+    this.load.image("background", background);
   }
 
   create () {
-    this.logoSprite = this.physics.add.sprite(400, 300, "logo");
-    this.logoSprite.setBounce(0.8);
-    this.logoSprite.setCollideWorldBounds(true);
-    this.logoSprite.setGravityY(400);
-    this.logoSprite.body.velocity.x = 250;
-    this.logoSprite.body.velocity.y = 150;
+    this.add.image(533,300, 'background').setScale(0.83333).refreshBody();
+    var platforms = this.physics.add.staticGroup();
+
+    platforms.create(533, 600-24, "floor").setScale(0.83333).refreshBody();
+
+    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+
   }
   update(deltaTime) {
 
