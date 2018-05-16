@@ -21,7 +21,16 @@ export default class GameScene extends Phaser.Scene {
 
     platforms.create(533, 600-24, "floor").setScale(0.83333);
 
+    //Smaller cactii in the background that don't affect the player
+    var bg_cactii = this.physics.add.staticGroup();
+
+    bg_cactii.create(513, 600-150, "cactus").setScale(0.3);
+    bg_cactii.create(513, 300, "cactus").setScale(0.15);
+    bg_cactii.create(623, 320, "cactus").setScale(0.15);
+
+    //"enemy" cactii that collide with player
     var cactii = this.physics.add.staticGroup();
+
     cactii.create(533, 600-50, "cactus").setScale(0.4);
     cactii.create(310, 600-50, "cactus").setScale(0.4);
     cactii.create(800, 600-50, "cactus").setScale(0.4).refreshBody();
