@@ -5,6 +5,7 @@ import cactus from "../assets/Cactus.png";
 import cloud from "../assets/Clouds.png";
 import dude from "../assets/MainCharacter.png";
 import coin from "../assets/CoinSprite.png";
+import balloon  from "../assets/balloonSprite.png";
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -19,6 +20,7 @@ export default class GameScene extends Phaser.Scene {
     this.load.image("cloud", cloud);
     this.load.spritesheet("dude", dude, { frameWidth: 75, frameHeight: 70 });
     this.load.spritesheet("coin", coin, { frameWidth: 256, frameHeight: 256});
+    this.load.spritesheet("balloon", balloon, { frameWidth: 150, frameHeight: 180});
   }
 
   create () {
@@ -60,7 +62,7 @@ export default class GameScene extends Phaser.Scene {
     //score and balloon count
     assets.score = 0;
     assets.balloons = 3;
-    assets.balloonsText = this.add.text(848, 16, 'Balloons: ' + assets.balloons, { fontSize: '32px', fill: '#FFF' });
+    assets.balloonsText = this.add.text(800, 16, 'Cactii: ' + assets.balloons, { fontSize: '32px', fill: '#FFF' });
     assets.scoreText = this.add.text(16, 16, 'Score: ' + assets.score, { fontSize: '32px', fill: '#FFF' });
 
 
@@ -99,6 +101,10 @@ export default class GameScene extends Phaser.Scene {
     assets.coins.create(498, 256, 'coin').setScale(0.2);
     assets.coins.create(689, 256, 'coin').setScale(0.2);
 
+    //balloon
+    assets.balloon = this.physics.add.sprite(100, 450, 'balloon').setScale(0.9);
+    
+
     //coin animation
     this.anims.create({
       key: 'coin_anim',
@@ -131,22 +137,39 @@ export default class GameScene extends Phaser.Scene {
           assets.coins.children.iterate(function (child) {
           child.enableBody(true, child.x, 0, true, true);
       });
+      }
+      
+  };
+  assets.functions.popBalloon = function (cactus, ball){
+    console.log('balloon');
+    ball.disableBody(true, true);
 
-      var x = (this.assets.player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
-    }
+    //  Add and update the score
+    assets.balloons -= 1;
+    assets.balloonsText.setText('Cactii: ' + this.assets.balloons);
+    if(assets.balloons < 1) assets.balloonsText.setText('YOU WIN');
+
+    
+
+  var x = (this.assets.player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
   };
 
   this.physics.add.overlap(assets.player, assets.coins, assets.functions.collectCoin, null, this);
+  this.physics.add.overlap(assets.balloon, assets.cactii, assets.functions.popBalloon, null, this);
   //  Checks to see if the player overlaps with any of the coins, if he does call the collectStar function
 
 
   this.physics.add.collider(assets.player, assets.platforms);
-  this.physics.add.collider(assets.player, assets.cactii);
+  
 
 
 
-  //  Collide the player and the stars with the platforms
+  //  Collide the player and the coins with the platforms
   this.physics.add.collider(assets.player, assets.platforms);
+
+  //Collide the balloons with the player
+  this.physics.add.collider(assets.balloon, assets.platforms);
+  
 
 }
 
@@ -159,7 +182,8 @@ update(deltaTime) {
     //this.assets.player.anims.play('left', true);
 
     assets.player.setVelocityX(-160);
-
+    assets.balloon.setVelocityX(-160);
+    
     assets.player.anims.play('left', true);
 
 
@@ -170,6 +194,7 @@ update(deltaTime) {
     //this.assets.player.anims.play('left', true);
 
     assets.player.setVelocityX(160);
+    assets.balloon.setVelocityX(160);
 
     assets.player.anims.play('right', true);
 
@@ -177,6 +202,7 @@ update(deltaTime) {
   else
   {
     assets.player.setVelocityX(0);
+    assets.balloon.setVelocityX(0);
 
     assets.player.anims.play('turn');
   }
@@ -192,6 +218,7 @@ update(deltaTime) {
   if (this.cursors.up.isDown && this.assets.player.body.touching.down)
   {
     assets.player.setVelocityY(-220);
+    assets.balloon.setVelocityY(-220);
   }
   assets.coins.children.iterate((coin) => coin.play('coin_anim', true));
 }
